@@ -151,13 +151,44 @@
 \begin{frame}
 \frametitle{The Declare Family}
 
-Declare comes in various variants
+Declare comes in several variants
 
 \begin{itemize}
-	\item propositional~\cite{}: no payloads, no tim
+	\item propositional~\cite{}: no payloads, no time
 	\item Multi-Perspective~\cite{}: payloads (data), metric time
 	\item Data-only perspective
 	\item Time-only perspective
+\end{itemize}
+
+...and different semantics:
+\begin{itemize}
+	\item events can be \emph{symbols} with a payload
+	\item events can encode \emph{changes} to certain variables
+\end{itemize}
+
+~\\
+
+We consider \emph{data-only} MP-Declare with symbolic events
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{MP-Declare}
+Example of (data-only) MP-Declare formulas
+
+\begin{itemize}
+	\item $\always(\forall x.((Pay\land\phi_a(x)) \rightarrow \eventually (Ship \land\exists y.\phi_c(x, y))))$
+\end{itemize}
+
+[FP: arrived here. Must complete the example above.]
+
+
+where:
+\begin{itemize}
+	\item $\phi_a=$
+	\item $\phi_b$: \emph{correlation} condition
 \end{itemize}
 
 
@@ -186,12 +217,13 @@ Declare comes in various variants
 	\item $\varphi$ can be expressed in various languages
 \end{itemize}
 
-\end{frame}
 
+
+\end{frame}
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Connection with AI}
+\frametitle{a}
 
 \begin{itemize}
 	\item problems from Declarative BPM often offer inspiration for 
