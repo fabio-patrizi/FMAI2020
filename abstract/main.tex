@@ -1,0 +1,104 @@
+\documentclass[12pt]{article}
+\usepackage{url}
+
+\title{Monitoring of MP-Declare constraints}
+\author{Fabio Patrizi, Sapienza University of Rome\\
+\url{patrizi@diag.uniroma1.it}
+}
+\date{}
+\begin{document}
+\maketitle
+
+This talk is about an ongoing (unpublished) work, joint with 
+Fabrizio M.~Maggi (Tartu University, Estonia) 
+and Marco Montali (Free University of Bozen-Bolzano, Italy),
+centered around the problem of 
+\emph{Monitoring of MP-Declare constraints.}
+%%
+MP-Declare is a first-order (FO) temporal logic interpreted over finite traces 
+of (sets of) attribute-value assignments. Such traces can suitably represent
+sequences of events recorded by a (unknown) process during execution. 
+%%
+Two classical problems in Declarative Process Mining are 
+Conformance Checking and Monitoring of constraints expressed in 
+MP-Declare. The former amounts to checking whether all the traces in a given
+set, a so-called \emph{log}, satisfy a certain set of MP-Declare 
+constraints. For this problem an ad-hoc solution was already devised. 
+The latter requires, given a finite trace, to check whether 
+each trace: satisfies the constraints and can/cannot falsify (any of) them;
+does not satisfy the constraints and can/cannot satisfy (some of) them.
+This, instead, is still an open problem.
+
+In our work, we started investigating decidability of monitoring, 
+which can be proven essentially
+equivalent to decidability of MP-Declare. 
+This study is complicated by the fact that 
+MP-Declare does not have an inductive structure and must be thus 
+analyzed \emph{by cases}.
+While attempting to solve this problem, we established a relationship
+between LTL$_f$-FO and another well studied logic, 
+namely LTL with freeze quantifiers, which led us to sketch
+an approach for conformance checking, based on the use
+of register automata. This approach improves the previous ad-hoc solution, 
+in that it is \emph{incremental}: differently from the previous one,
+when a trace is extended by a new event, one does not need to check 
+constraint's satisfaction from scratch, but needs to perform only some additional
+computation steps.
+Notably, the very same technique seems a promising solution 
+for a bounded variant of the monitoring problem, i.e., where one 
+wants to monitor constraint satisfaction up to a bounded number of 
+steps from the last event of the current trace. This result, however, 
+is not readily available, as it requires an abstraction phase. To this end,
+we can exploit previous results about abstraction of 
+\emph{state-bounded} data-aware processes, i.e., processes whose 
+states can contain a number of distinct objects bounded by some integer.
+Interestingly, the monitoring setting provides a natural example of 
+such systems.
+
+
+\end{document}
+
+
+\endinput
+
+
+
+To avoid, this, inspired by the inclusion
+relationship between (non-MP) Declare and the linear-time temporal 
+logic over finite traces LTL$_f$, with the former being a 
+strict sublanguage of the latter, we introduced LTL$_f$-FO to study 
+the problem's decidability. This is a natural generalization of  LTL$_f$
+to FO, which features the desired inductive structure, but is strictly 
+more expressive than MP-Declare. While this is known to be undecidabl
+
+
+
+
+
+
+In recent years, the problem of specifying and verifying data-aware systems
+has been address by different groups~\cite{}. The interested communities
+span  from Process Mining, to Reasoning about Action to 
+Multi-Agent Systems.
+%%
+The main difficulty with this problem 
+consists in the fact that the explicit modeling of data-related aspects,
+besides those related to control-flow,  yields a model with infinitely many
+relational states, for which model checking is undecidable in general. 
+Such undecidability holds for virtually any logic of practical interest that 
+combines object quantification together with temporal modalities~\cite{}.
+%%
+One notable result in this context is that decidability of model checking can
+be achieved, for a rather expressive class of logics, when the system under 
+analysis is \emph{state-bounded}, i.e., all its reachable states contain a 
+number of distinct objects that is bounded by some integer. Even with this 
+feature, the system can still be infinite-state.
+State-boundedness, however, is a semantical notion, i.e., one cannot 
+check whether a system is state-bounded by simply analysis its specification.
+Yet, in situations where the system is known to be state-bounded such results
+become applicable.
+ 
+
+
+
+
