@@ -84,10 +84,11 @@
 
 
 %%MACROS
-\newcommand{\always}{\mathbf{always}}
+\newcommand{\A}{\mathcal A}
+\newcommand{\always}{\mathbf{G}}
 \newcommand{\limp}{\rightarrow}
-\newcommand{\nextX}{\mathbf{next}}
-\newcommand{\eventually}{\mathbf{eventually}}
+\newcommand{\nextX}{\mathbf{X}}
+\newcommand{\eventually}{\mathbf{F}}
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -129,24 +130,48 @@
 %----------------------------------------------------------------------------------------
 
 \begin{frame}
+\frametitle{Motivation}
+
+\begin{itemize}
+	\item We deal with a problem originated in Declarative BPM
+	\item Such problems inspired results of interest in AI and FM, e.g.,~\cite{AAAI 17} 
+	\item Problems concern the dynamic of (running) systems and verification/synthesis problems
+	\item Easily Generalizable/Applocable to Agent Behaviors
+\end{itemize}
+
+Results obtained in the BPM context are of interest to AI
+
+\end{frame}
+
+%------------------------------------------------
+
+
+\begin{frame}
 \frametitle{Monitoring}
 
 \begin{itemize}
 	\item Running system produces finite traces of \emph{events} with payload: 
 	$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)$$ 
-	
-	\item Monitor the execution against a specification $\varphi$:
+
+	\item Given fragment so far, assign truth value:
 		\begin{itemize}
-			\item temporarily satisfied/violated (TS, TV)
-			\item permanently satisfied/violated (PS, PV)
+			\item temporarily satisfied (TS): $\varphi$ currently satisfied, can still be violated
+			\item temporarily violated (TV): $\varphi$ currently violated, can still be satisfied
+			\item permanently satisfied (PS): $\varphi$ currently satisfied, cannot be violated
+			\item permanently violated (PV): $\varphi$ currently violated, cannot be satisfied
 		\end{itemize}	
-	
-	\item $\varphi$ can be expressed in various languages
+		
+	\item  {\bf essentially satisfiability}:\\ 
+	~~~~~~~complete current fragment to satisfy $\varphi$
+		$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)\cdots$$ 
+
+	\item $\varphi$ can be expressed in various languages, e.g., Declare
 \end{itemize}
 
 \end{frame}
 
 %----------------------------------------------------------------------------------------
+
 
 \begin{frame}
 \frametitle{The Declare Family}
@@ -154,13 +179,13 @@
 Declare comes in several variants
 
 \begin{itemize}
-	\item propositional~\cite{}: no payloads, no time
+	\item Propositional~\cite{}: no payloads, no time
 	\item Multi-Perspective~\cite{}: payloads (data), metric time
-	\item Data-only perspective
+	\item Data-only perspective ({\bf this work})
 	\item Time-only perspective
 \end{itemize}
 
-...and different semantics:
+And different semantics:
 \begin{itemize}
 	\item events can be \emph{symbols} with a payload
 	\item events can encode \emph{changes} to certain variables
@@ -168,7 +193,7 @@ Declare comes in several variants
 
 ~\\
 
-We consider \emph{data-only} MP-Declare with symbolic events
+We consider {\bf \emph{data-only} MP-Declare} with symbols as events
 
 \end{frame}
 
@@ -176,61 +201,56 @@ We consider \emph{data-only} MP-Declare with symbolic events
 
 \begin{frame}
 \frametitle{MP-Declare}
-Example of (data-only) MP-Declare formulas
+Example (data-only):
 
 \begin{itemize}
 	\item $\always(\forall x.((Pay\land\phi_a(x)) \rightarrow \eventually (Ship \land\exists y.\phi_c(x, y))))$
 \end{itemize}
 
-[FP: arrived here. Must complete the example above.]
-
-
 where:
 \begin{itemize}
-	\item $\phi_a=$
-	\item $\phi_b$: \emph{correlation} condition
+	\item $\phi_a\equiv item=x$ \text{ (\emph{activation} condition)}
+	\item $\phi_b\equiv invoice(y,x)$ \text{ (\emph{correlation} condition)}
 \end{itemize}
 
+~\\
 
+Allowed templates:
+\begin{scriptsize}
 \begin{itemize}
-	\item Previous work on Declare
-	\item MP-Declare:
-		\begin{itemize}
-			\item time not this talk (but related work ongoing, e.g. KR)
-			\item data, this talk: FO
-		\end{itemize}
-	\item Open problem: decidability (Marco, correct?)
+	\item (ignore time subscripts $I$)
+	\item (can be equivalently defined without past operators $Y$ and $O$)
 \end{itemize}
+\end{scriptsize}
 
-
-
-\begin{itemize}
-	\item Running system produces finite traces of \emph{events} with payload: 
-	$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)$$ 
-	
-	\item Monitor the execution against a specification $\varphi$:
-		\begin{itemize}
-			\item temporarily satisfied/violated (TS, TV)
-			\item permanently satisfied/violated (PS, PV)
-		\end{itemize}	
-	
-	\item $\varphi$ can be expressed in various languages
-\end{itemize}
+\begin{center}
+\includegraphics[scale=.3]{figures/mp-declare}
+\end{center}
 
 
 
 \end{frame}
+
 %------------------------------------------------
 
+
+
 \begin{frame}
-\frametitle{a}
+\frametitle{Previous Work}
 
 \begin{itemize}
-	\item problems from Declarative BPM often offer inspiration for 
-		results that turn out to be of interest in AI and FM
-	\item such problems typically concern the dynamic of (running) systems and 
-		verification/synthesis problem
-	\item Generalizable to Agent Behaviors
+	\item Monitoring solved for the propositional case~\cite{}
+	\begin{itemize}
+		\item Declare is a fragment of LTL on finite traces (LTL$_f$)
+		\item Can be catpured by FSA
+		\item Technique based on coloring the automaton $\A_\varphi$
+		\item Reduces to a fixpoint computation on $\A_\varphi$
+	\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+	\item In general, we are working on lifting the technique to\\ {\bf full MP-Declare}
+	\item Currently we are focussing on the {\bf data-only} fragment
 \end{itemize}
 
 \end{frame}
@@ -238,10 +258,14 @@ where:
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Results}
+\frametitle{Results (ongoing)}
 
-\begin{itemize}
-	\item MP-Declare by examples
+\begin{itemize}	
+	\item 
+\end{itemize}
+
+
+\begin{itemize}	
 	\item MP-Declare is a sublanguage of LTLf, but we consider the restriction to persistence-preserving
 	\item say that we deal with log-traces and that activities have attributes
 	\item To perform monitoring we need to compute satisfiability (if we have this, we can always determine all 4 truth values)
