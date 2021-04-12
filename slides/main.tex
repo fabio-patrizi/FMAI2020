@@ -79,16 +79,29 @@
 
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
-
 \usepackage{soul}
+\usepackage{xspace}
 
 
 %%MACROS
-\newcommand{\A}{\mathcal A}
-\newcommand{\always}{\mathbf{G}}
+\newcommand{\A}{\mathcal A\xspace}
+\renewcommand{\L}{\mathcal L\xspace}
+\newcommand{\T}{\mathcal T\xspace}
+\newcommand{\always}{\mathbf{G}\xspace}
 \newcommand{\limp}{\rightarrow}
-\newcommand{\nextX}{\mathbf{X}}
-\newcommand{\eventually}{\mathbf{F}}
+\newcommand{\nextX}{\mathbf{X}\xspace}
+\newcommand{\eventually}{\mathbf{F}\xspace}
+\newcommand{\ltlX}{\nextX}
+\newcommand{\ltlU}{\mathbf{U}}
+\newcommand{\true}{true}
+\newcommand{\live}{\textsc{live}}
+\newcommand{\ltl}{\textsc{ltl}\xspace}
+\newcommand{\ltlf}{\textsc{ltl}$_f$\xspace}
+\newcommand{\ltlffo}{\ltlf-\textsc{fo}\xspace}
+\newcommand{\ltlffop}{\ltlf-\textsc{fo}$_p$\xspace}
+\newcommand{\muLp}{$\mu\L_p$\xspace}
+\newcommand{\DIAM}{\langle-\rangle\xspace}
+\newcommand{\BOX}{[-]\xspace}
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -136,10 +149,8 @@
 	\item We deal with a problem originated in Declarative BPM
 	\item Such problems inspired results of interest in AI and FM, e.g.,~\cite{AAAI 17} 
 	\item Problems concern the dynamic of (running) systems and verification/synthesis problems
-	\item Easily Generalizable/Applocable to Agent Behaviors
+	\item Generalizable/Applicable to Agent Behaviors
 \end{itemize}
-
-Results obtained in the BPM context are of interest to AI
 
 \end{frame}
 
@@ -152,8 +163,13 @@ Results obtained in the BPM context are of interest to AI
 \begin{itemize}
 	\item Running system produces finite traces of \emph{events} with payload: 
 	$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)$$ 
+	
+	\item alphabet of activities is \emph{finite and given}, e.g., $A,B,C,D,E$
+\end{itemize}
 
-	\item Given fragment so far, assign truth value:
+Problem:
+\begin{itemize}
+	\item Given fragment so far, assign truth value wrt temporal spec $\varphi$:
 		\begin{itemize}
 			\item temporarily satisfied (TS): $\varphi$ currently satisfied, can still be violated
 			\item temporarily violated (TV): $\varphi$ currently violated, can still be satisfied
@@ -176,10 +192,12 @@ Results obtained in the BPM context are of interest to AI
 \begin{frame}
 \frametitle{The Declare Family}
 
+		$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)\cdots$$ 
+
 Declare comes in several variants
 
 \begin{itemize}
-	\item Propositional~\cite{}: no payloads, no time
+	\item Declare (propositional)~\cite{}: no payloads, no (metric) time
 	\item Multi-Perspective~\cite{}: payloads (data), metric time
 	\item Data-only perspective ({\bf this work})
 	\item Time-only perspective
@@ -188,7 +206,7 @@ Declare comes in several variants
 And different semantics:
 \begin{itemize}
 	\item events can be \emph{symbols} with a payload
-	\item events can encode \emph{changes} to certain variables
+	\item events can encode \emph{changes} to process variables
 \end{itemize}
 
 ~\\
@@ -241,46 +259,164 @@ Allowed templates:
 \begin{itemize}
 	\item Monitoring solved for the propositional case~\cite{}
 	\begin{itemize}
-		\item Declare is a fragment of LTL on finite traces (LTL$_f$)
-		\item Can be catpured by FSA
-		\item Technique based on coloring the automaton $\A_\varphi$
-		\item Reduces to a fixpoint computation on $\A_\varphi$
+		\item Declare is a fragment of \ltl on finite traces (\ltlf)
+		\item $\varphi$ has a corresponding FSA $\A_\varphi$ s.t. $\L(\A_\varphi)=\L(\varphi)$
+		\item Technique based on \emph{coloring} $\A_\varphi$
+		\item Essentially a  fixpoint computation on $\A_\varphi$
 	\end{itemize}
 \end{itemize}
 
 \begin{itemize}
-	\item In general, we are working on lifting the technique to\\ {\bf full MP-Declare}
-	\item Currently we are focussing on the {\bf data-only} fragment
+	\item Ultimate goal is lifting the technique to {\bf full MP-Declare}
+	\item Currently focussing on {\bf data-only} fragment
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{\ltlffo}
+
+\ltlffo: lifting of \ltlf~to FO
+\[
+  \varphi ::=  \true \mid \phi  \mid \lnot \varphi \mid \varphi_1 \land \varphi_2 \mid \exists
+  x.\varphi \mid \ltlX{\varphi}  \mid \varphi_1 \ltlU \varphi_2\text{ (}\phi:\text{ FO formula)} 
+\]
+
+
+
+\begin{itemize}	
+	\item local properties are expressed in FOL
+	\item across-state quantification allowed
+	\item interpreted over finite traces of FO interpretations
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{Data-only MP-Declare and \ltlffo}
+
+\ltlffo captures data-only MP-Declare
+
+\begin{itemize}	
+	\item Working with MP-Declare is difficult:
+	\begin{itemize}	
+		\item Templates, No recursive structure
+		\item Must work ``by cases'', cannot use induction
+	\end{itemize}
+	
+	\item \ltlffo is simpler, but:
+	\begin{itemize}	
+		\item more expressive
+		\item undecidable~\cite{} both SAT and MC\\ 
+			(does not imply MP-Declare undecidability)
+	\end{itemize}
 \end{itemize}
 
 \end{frame}
 
 %------------------------------------------------
 
-\begin{frame}
-\frametitle{Results (ongoing)}
 
+\begin{frame}
+\frametitle{\ltlffop}
+
+We are currently solving the problem for 
+\begin{center}
+	\ltlffop: \emph{persistence-preserving} \ltlffo
+\end{center}
+%%
+\[\varphi ::= \true \mid \phi \mid \lnot \varphi \mid \varphi_1 \land \varphi_2 \mid 
+\exists \vec x.\live(\vec x)\land\varphi(\vec x) \mid
+\live(\vec x)\land \ltlX\varphi(\vec x)  \mid\]
+\[(\live(\vec x, \vec y)\land \varphi_1(\vec x)) \ltlU \varphi_2(\vec y)\]
+%%
 \begin{itemize}	
-	\item 
+	\item $\live(x)$: object $x$ is in \emph{active domain}
+	\item Quantification restricted only to objects that persist across states
 \end{itemize}
 
+~\\
+
+The problem is now: Monitoring of  \ltlffop
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{\muLp Model Checking}
+
+\begin{center}
+	\muLp: persistence-preserving fragment of FO $\mu$-calc 
+\end{center}
+%%
+\[\varphi = \phi\mid\lnot\varphi\mid~\varphi_1\land\varphi_2 \mid
+     \exists x. \live(x) \land \varphi\mid\live(\vec{x}) \land \DIAM{\varphi} \mid
+     \live(\vec{x}) \land \BOX{ \varphi}\mid\]
+\[Z\mid\mu Z.\varphi\]
+
+
+\begin{theorem}[\cite{?}]
+	Model checking for  \muLp is decidable, if the TS under analysis is
+	\begin{itemize}	
+		\item \emph{state-bounded}: every state contains boundedly many \emph{active objects}
+		\item \emph{generic}:  same TS-states modulo object renaming have exactly 
+			same successors, modulo object renaming 
+ 	\end{itemize}
+\end{theorem}
+
+%%\begin{itemize}	
+%%	\item \muLp is strictly related to \ltlffop
+%%	\item But results not immediately applicable to \ltlffop  
+%%\end{itemize}
+
+\begin{enumerate}	
+	\item We can transfer this result to \ltlffop
+	\item We can exploit \ltlffop model checking for monitoring
+\end{enumerate}
+
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{\muLp and \ltlffop Model Checking}
+
+\begin{itemize}
+	\item By~\cite{}, for $\varphi\in {}$\muLp:
+	\begin{itemize}
+		\item If TS $\T$ is generic and state-bounded, then we can construct a finite-state
+			faithful abstraction $\hat\T$, 
+			s.t.~$\T\models\varphi\Leftrightarrow\hat\T\models\varphi$
+	\end{itemize}
+
+	\item Same construction applies to \ltlffop, even in the finite-trace case
+	
+	\item Simple proof, based on
+	\begin{itemize}
+		\item bisim
+	\end{itemize}
+	 constructing a 1-trace TS 
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{\ltlffop  Model Checking}
+
+
 
 \begin{itemize}	
-	\item MP-Declare is a sublanguage of LTLf, but we consider the restriction to persistence-preserving
-	\item say that we deal with log-traces and that activities have attributes
-	\item To perform monitoring we need to compute satisfiability (if we have this, we can always determine all 4 truth values)
+	\item \emph{state-boundedness}: log traces are natively bounded 
+	
+	
+	say that we deal with log-traces and that activities have attributes
 	\item We need to establish decidability in this context
-	\item We have some results on mu-calc, not directly applicable to LTLf
-	\item Our goal is to transfer these results to LTLf (joint work with DC and GDG) 
-		and thus to MP-Declare
 \end{itemize}
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Results 2}
 
 \begin{itemize}
 	\item The results we have are for bounded systems
