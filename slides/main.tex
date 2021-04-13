@@ -386,29 +386,48 @@ The problem is now: Monitoring of  \ltlffop
 \frametitle{\muLp and \ltlffop Model Checking}
 
 \begin{itemize}
-	\item By~\cite{}, for $\varphi\in {}$\muLp:
+	\item By proof of theorem above, for $\varphi\in {}$\muLp:
 	\begin{itemize}
-		\item If TS $\T$ is generic and state-bounded, then we can construct a finite-state
+		\item If TS $\T$ is generic and state-bounded, we can construct a finite-state
 			faithful abstraction $\hat\T$, 
 			s.t.~$\T\models\varphi\Leftrightarrow\hat\T\models\varphi$
 	\end{itemize}
 
 	\item Same construction applies to \ltlffop, even in the finite-trace case
 	
-	\item Simple proof, based on
+	\begin{theorem}
+		Model checking for  \ltlffop is decidable, if the TS $\T$ under analysis is
+		\emph{state-bounded} and  \emph{generic}
+	\end{theorem}
+
+	
+	\item Main proof steps
 	\begin{itemize}
-		\item bisim
+		\item Can construct a finite-state $\hat \T$ s.t.~$\T$ and  are \emph{persistence-preserving bisimilar}
+		\item p-Bisimilar TSs have \emph{bisimilar} traces, i.e., same traces 
+			modulo (persistence-preserving) object renaming
+		\item Bisimilar traces satisfy exactly same \ltlffop formulas
 	\end{itemize}
-	 constructing a 1-trace TS 
 \end{itemize}
+Proof substantially analogous to that of~\cite{}, but different technicalities
 \end{frame}
 
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{\ltlffop  Model Checking}
+\frametitle{From \ltlffop  Model Checking to Monitoring}
 
+Assume the system has produced a log-trace:
+$$\tau=e_1~\cdots~e_n$$
 
+We can define a TS $\T_\tau$ s.t.:
+\begin{itemize}
+	\item all $\T_\tau$ traces with $\geq n$ events have the form:
+		\[e_1~e_1~\cdots~e_n~e_{n+1}\cdots~e_\ell\]
+	\item $\T_\tau$ produces all possible log traces
+\end{itemize}
+
+Clearly $\T_\tau$ is inifinite
 
 \begin{itemize}	
 	\item \emph{state-boundedness}: log traces are natively bounded 
