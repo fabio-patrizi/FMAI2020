@@ -218,7 +218,7 @@ Declare comes in several variants
 
 \begin{itemize}
 	\item Declare (propositional)~\cite{}: no payloads, no (metric) time
-	\item Multi-Perspective~\cite{}: payloads (data), metric time
+	\item Multi-Perspective~\cite{mp-declare}: payloads (data), metric time
 	\item Data-only perspective ({\bf this work})
 	\item Time-only perspective
 \end{itemize}
@@ -277,7 +277,7 @@ Allowed templates:
 \frametitle{Previous Work}
 
 \begin{itemize}
-	\item Monitoring solved for the propositional case~\cite{}
+	\item Monitoring solved for the propositional case~\cite{monitoring11}
 	\begin{itemize}
 		\item Declare is a fragment of \ltl on finite traces (\ltlf)
 		\item $\varphi$ has a corresponding FSA $\A_\varphi$ s.t. $\L(\A_\varphi)=\L(\varphi)$
@@ -298,7 +298,7 @@ Allowed templates:
 \begin{frame}
 \frametitle{Solution for propositional case (\ltlf)}
 
-Approach for propositional case (\ltlf)~\cite{}:  
+Approach for propositional case (\ltlf)~\cite{monitoring11}:  
 \begin{enumerate}
 	\item From $\varphi$, obtain $\A_\varphi$ (det, minimized)
 	\item (Fixpoint computation)\\ 
@@ -365,7 +365,7 @@ Example:
 	\item \ltlffo is simpler, but:
 	\begin{itemize}	
 		\item more expressive
-		\item undecidable~\cite{} both SAT and MC\\ 
+		\item undecidable~\cite{IC18} both SAT and MC\\ 
 			(does not imply MP-Declare undecidability)
 	\end{itemize}
 \end{itemize}
@@ -550,11 +550,11 @@ Conclusions:
 	\item Currently focusing on data, \ltlffop
 	\item Computability result based on abstraction technique
 		\begin{itemize}
-			\item inspired by related research line on FO $\mu$-calc~\cite{} (Model Checking)
+			\item inspired by related research line on (Model Checking) FO $\mu$-calc (e.g.,\cite{AIJ16,IC18})
 		\end{itemize}
 	\item Complexity is a major obstacle: 
 		\begin{itemize}
-			\item Need whole automaton to perform coloring
+			\item Need whole automaton to perform coloring (no on-the-fly approach)
 			\item but \# of objects typically small
 		\end{itemize}
 \end{itemize}
@@ -578,9 +578,20 @@ Future Work:
 
 %------------------------------------------------
 
+\begin{frame}
+\frametitle{Thank you!}
+\begin{center}
+\begin{huge}
+Questions?
+\end{huge}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+
 \begin{frame}[allowframebreaks]
 \frametitle{References}
-\normalsize{
+\small{
 % \begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
 % \bibitem[Smith, 2012]{p1} John Smith (2012)
 % \newblock Title of the publication
