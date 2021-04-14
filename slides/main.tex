@@ -15,7 +15,7 @@
 %	PACKAGES AND THEMES
 %----------------------------------------------------------------------------------------
 
-\documentclass{beamer}
+\documentclass[xcolor=dvipsnames]{beamer}
 
 \mode<presentation> {
 
@@ -81,7 +81,8 @@
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 \usepackage{soul}
 \usepackage{xspace}
-
+\usepackage[dvipsnames]{xcolor}
+\usepackage{MnSymbol,wasysym}
 
 %%MACROS
 \newcommand{\A}{\mathcal A\xspace}
@@ -102,6 +103,18 @@
 \newcommand{\muLp}{$\mu\L_p$\xspace}
 \newcommand{\DIAM}{\langle-\rangle\xspace}
 \newcommand{\BOX}{[-]\xspace}
+
+\newcommand{\yellow}[1]{\textcolor{Dandelion}{#1}}
+\newcommand{\blue}[1]{\textcolor{Aquamarine}{#1}}
+\newcommand{\green}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\red}[1]{\textcolor{BrickRed}{#1}}
+
+
+\newcommand{\orange}[1]{\textcolor{BurntOrange}{#1}}
+\newcommand{\violet}[1]{\textcolor{Violet}{#1}}
+\newcommand{\sepia}[1]{\textcolor{Sepia}{#1}}
+
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -146,30 +159,30 @@
 \frametitle{Motivation}
 
 \begin{itemize}
-	\item We deal with a problem originated in Declarative BPM
-	\item Such problems inspired results of interest in AI and FM, e.g.,~\cite{AAAI 17} 
+	\item We deal with a problem originated in Declarative Process Mining
+	\item Such problems inspired results of interest in AI and FM, e.g.,~\cite{AAAI17} 
 	\item Problems concern the dynamic of (running) systems and verification/synthesis problems
-	\item Generalizable/Applicable to Agent Behaviors
+	\item Generalizable/Applicable to Agents
 \end{itemize}
 
 \end{frame}
 
 %------------------------------------------------
 
-
 \begin{frame}
 \frametitle{Monitoring}
 
 \begin{itemize}
-	\item Running system produces finite traces of \emph{events} with payload: 
-	$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)$$ 
-	
-	\item alphabet of activities is \emph{finite and given}, e.g., $A,B,C,D,E$
+	\item Running system produces traces of \emph{activities with payload} (events): 
+	$$\tau=(A,2,1)~(B,1,44,4)~(D,'hello',3)~(A,3,3)$$ 
+	\item alphabet $\Sigma$ of activities is \emph{finite and given}, e.g., $\Sigma=\{A,B,C,D,E\}$
+	\item \# of attributes per activity is \emph{fixed}
+	\item objects assignable to attributes from \emph{infinite domain} $\Delta$
 \end{itemize}
 
 Problem:
 \begin{itemize}
-	\item Given fragment so far, assign truth value wrt temporal spec $\varphi$:
+	\item Given a finite trace, assign truth value wrt temporal spec $\varphi$:
 		\begin{itemize}
 			\item temporarily satisfied (TS): $\varphi$ currently satisfied, can still be violated
 			\item temporarily violated (TV): $\varphi$ currently violated, can still be satisfied
@@ -177,9 +190,8 @@ Problem:
 			\item permanently violated (PV): $\varphi$ currently violated, cannot be satisfied
 		\end{itemize}	
 		
-	\item  {\bf essentially satisfiability}:\\ 
-	~~~~~~~complete current fragment to satisfy $\varphi$
-		$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)\cdots$$ 
+%%	\item  essentially, complete fragment to satisfy $\varphi$, or prove can't be done
+%%		$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)\cdots$$ 
 
 	\item $\varphi$ can be expressed in various languages, e.g., Declare
 \end{itemize}
@@ -187,12 +199,20 @@ Problem:
 \end{frame}
 
 %----------------------------------------------------------------------------------------
+%%
+%%
+%%\begin{frame}
+%%\frametitle{The Declare Family}
+%%(Figure with example of monitoring)
+%%\end{frame}
+
+%----------------------------------------------------------------------------------------
 
 
 \begin{frame}
 \frametitle{The Declare Family}
 
-		$$A(2,1)~B(1,44,4)~D('hello',3)~A(3,3)\cdots$$ 
+	$$\tau=(A,2,1)~(B,1,44,4)~(D,'hello',3)~(A,3,3)$$ 
 
 Declare comes in several variants
 
@@ -211,7 +231,7 @@ And different semantics:
 
 ~\\
 
-We consider {\bf \emph{data-only} MP-Declare} with symbols as events
+We consider {\bf \emph{data-only} Declare} with symbols as events
 
 \end{frame}
 
@@ -228,7 +248,7 @@ Example (data-only):
 where:
 \begin{itemize}
 	\item $\phi_a\equiv item=x$ \text{ (\emph{activation} condition)}
-	\item $\phi_b\equiv invoice(y,x)$ \text{ (\emph{correlation} condition)}
+	\item $\phi_c\equiv item= x \land address=y$ \text{ (\emph{correlation} condition)}
 \end{itemize}
 
 ~\\
@@ -274,6 +294,38 @@ Allowed templates:
 \end{frame}
 
 %------------------------------------------------
+
+\begin{frame}
+\frametitle{Solution for propositional case (\ltlf)}
+
+Approach for propositional case (\ltlf)~\cite{}:  
+\begin{enumerate}
+	\item From $\varphi$, obtain $\A_\varphi$ (det, minimized)
+	\item (Fixpoint computation)\\ 
+		Assign one color to each $\A_\varphi$-state:
+	\begin{itemize}
+		\item \green{PS},\yellow{TS},\red{PV},\blue{TV}
+	\end{itemize}
+	\item Simulate $\A_\varphi$ on input $\tau$ and assign value according to current color
+\end{enumerate}
+
+~\\
+
+Example:
+\begin{itemize}
+	\item $\varphi=\eventually p\lor \always(q\rightarrow\eventually r)$
+	\item $\tau=\yellow{a}~\yellow{a}~\blue{q}~\blue{a}~\yellow{r}~\green{p}~\green{\cdots}$
+\end{itemize}
+
+\begin{center}
+	%%\includegraphics[scale=.2]{figures/a_phi}
+	\includegraphics[scale=.2]{figures/a_phi_colored}
+	%%\includegraphics[scale=.2]{figures/color_codes}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+
 \begin{frame}
 \frametitle{\ltlffo}
 
@@ -299,6 +351,10 @@ Allowed templates:
 
 \ltlffo captures data-only MP-Declare
 
+\begin{center} 
+	\includegraphics[scale=.15]{figures/ltl-declare}
+\end{center}
+%%
 \begin{itemize}	
 	\item Working with MP-Declare is difficult:
 	\begin{itemize}	
@@ -314,6 +370,7 @@ Allowed templates:
 	\end{itemize}
 \end{itemize}
 
+
 \end{frame}
 
 %------------------------------------------------
@@ -322,7 +379,7 @@ Allowed templates:
 \begin{frame}
 \frametitle{\ltlffop}
 
-We are currently solving the problem for 
+We are focussing on the problem for 
 \begin{center}
 	\ltlffop: \emph{persistence-preserving} \ltlffo
 \end{center}
@@ -337,394 +394,147 @@ We are currently solving the problem for
 	\item Quantification restricted only to objects that persist across states
 \end{itemize}
 
-~\\
-
-The problem is now: Monitoring of  \ltlffop
+The problem is now: Monitoring of  \ltlffop \includegraphics[scale=.2]{figures/ltlp-declare}
 
 \end{frame}
 
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{\muLp Model Checking}
+\frametitle{From \ltlffop to \ltlf Monitoring}
 
-\begin{center}
-	\muLp: persistence-preserving fragment of FO $\mu$-calc 
-\end{center}
-%%
-\[\varphi = \phi\mid\lnot\varphi\mid~\varphi_1\land\varphi_2 \mid
-     \exists x. \live(x) \land \varphi\mid\live(\vec{x}) \land \DIAM{\varphi} \mid
-     \live(\vec{x}) \land \BOX{ \varphi}\mid\]
-\[Z\mid\mu Z.\varphi\]
+We want to lift approach from \ltlf to \ltlffop
+
+~\\
+
+Obstacles: 
+\begin{itemize}
+	\item must define $\A_\varphi$ for the FO case
+	\item $\A_\varphi$ must be effectively computable
+\end{itemize}
+
+~\\
+
+Recall: 
+\begin{itemize}
+	\item activities carry a payload, i.e., $(A,1,2)$ instead of $A$
+	\item payloads come from infinite domain (e.g., $\mathbb{N}$)
+	\item $\A_\varphi$ must take payload into account ${}\rightarrow{}$ expect infiniteness
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{From \ltlffop to \ltlf Monitoring}
 
 
-\begin{theorem}[\cite{?}]
-	Model checking for  \muLp is decidable, if the TS under analysis is
-	\begin{itemize}	
-		\item \emph{state-bounded}: every state contains boundedly many \emph{active objects}
-		\item \emph{generic}:  same TS-states modulo object renaming have exactly 
-			same successors, modulo object renaming 
- 	\end{itemize}
+\ltlffop  monitoring can be reduced to the propositional case
+
+~\\
+
+
+IDEA: 
+\begin{itemize}
+	\item satisfaction of \ltlffop formulae does not depend on \emph{actual objects}
+	\item but on their \emph{mutual relationships}
+\end{itemize}
+
+~\\
+
+Example ($\tilde{\cdot}$ stands for \emph{persistence-preserving} version):\\
+$\varphi=\tilde\always(\forall x.((Pay\land\phi_a(x)) \rightarrow \tilde\eventually (Ship \land\exists y.\phi_c(x, y))))$,
+
+\begin{itemize}
+	\item $\phi_a\equiv item=x$ \text{ (\emph{activation} condition)}
+	\item $\phi_c\equiv item= x \land address=y$ \text{(\emph{correlation} condition)}
+\end{itemize}
+
+\begin{itemize}
+	\item $(\orange{Pay},10,\violet{shoes})~~~~(\sepia{DoSomething},\violet{shoes})~~~(\green{Ship},\violet{shoes},Park Avn)$
+	\item $(\orange{Pay},1,\violet{gloves})~~~~(\sepia{DoSomething},\violet{gloves})~~(\green{Ship},\violet{gloves},Red Square)$
+	\item $~~~(\orange{Pay},o_1,\violet{o_2})~~~~~~~~(\sepia{DoSomething},\violet{o_2})~~~~~~~~~~~~(\green{Ship},\violet{o_2},o_1)$
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{From \ltlffop to \ltlf Monitoring}
+
+\begin{definition}[p-equivalence]
+Traces $\tau$ and $\tau'$ are \emph{p-equivalent} if obtained from each other through object renaming 
+that preserves names of objects \ul{which persist between consecutive states}
+\end{definition}
+
+\begin{itemize}
+	\item $(\orange{Pay},10,\violet{shoes})~~~~(\sepia{DoSomething},\violet{shoes})~~~(\green{Ship},\violet{shoes},Park Avn)$
+	\item $~~~(\orange{Pay},o_1,\violet{o_2})~~~~~~~~(\sepia{DoSomething},\violet{o_2})~~~~~~~~~~~~(\green{Ship},\violet{o_2},o_1)$
+	\item Crucial Observation: $o_1$ can be reused! (since not persisting)
+\end{itemize}
+
+
+\begin{theorem}
+	\begin{enumerate}
+		\item p-equivalent traces satisfy exactly same \ltlffop formulas
+		\item $(2*max\_event\_arity)+1$ objects suffice to have a $\tau'$
+			bisimilar to any $\tau$
+	\end{enumerate}
 \end{theorem}
 
-%%\begin{itemize}	
-%%	\item \muLp is strictly related to \ltlffop
-%%	\item But results not immediately applicable to \ltlffop  
-%%\end{itemize}
 
-\begin{enumerate}	
-	\item We can transfer this result to \ltlffop
-	\item We can exploit \ltlffop model checking for monitoring
+\begin{itemize}
+	\item we can work with \emph{equivalence classes} of events
+	\item we can reduce to the case of \emph{finitely many} objects $\rightarrow$ propositional!
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{From \ltlffop to \ltlf Monitoring}
+
+Approach for \ltlffop: 
+\begin{enumerate}
+	\item Fix object domain $\hat\Delta=\{o_1,\ldots,o_{2m+1}\}$, 	for $m=max\_event\_arity$
+	\item Compute $\hat\varphi$:\\ 
+		~~~~propositional version of $\varphi$ (quantifier elimination with $\hat\Delta$) 
+	\item Compute and color $\A_{\hat\varphi}$ (same as propostitional)
+	\item\label{item:transform} Transform input $\hat\tau$ into p-bisimilar $\hat\tau$ over $\hat\Delta$, e.g.:
+		\begin{itemize}
+			\item $(\orange{Pay},10,\violet{shoes})~~~~(\sepia{DoSomething},\violet{shoes})~~~(\green{Ship},\violet{shoes},Park Avn)$
+			\item $~~~(\orange{Pay},o_1,\violet{o_2})~~~~~~~~(\sepia{DoSomething},\violet{o_2})~~~~~~~~~~~~(\green{Ship},\violet{o_2},o_1)$
+		\end{itemize}	
+	\item\label{item:simulate} Simulate $\A_{\hat\varphi}$ on $\hat\tau$
 \end{enumerate}
 
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{\muLp and \ltlffop Model Checking}
-
-\begin{itemize}
-	\item By proof of theorem above, for $\varphi\in {}$\muLp:
-	\begin{itemize}
-		\item If TS $\T$ is generic and state-bounded, we can construct a finite-state
-			faithful abstraction $\hat\T$, 
-			s.t.~$\T\models\varphi\Leftrightarrow\hat\T\models\varphi$
-	\end{itemize}
-
-	\item Same construction applies to \ltlffop, even in the finite-trace case
-	
-	\begin{theorem}
-		Model checking for  \ltlffop is decidable, if the TS $\T$ under analysis is
-		\emph{state-bounded} and  \emph{generic}
-	\end{theorem}
-
-	
-	\item Main proof steps
-	\begin{itemize}
-		\item Can construct a finite-state $\hat \T$ s.t.~$\T$ and  are \emph{persistence-preserving bisimilar}
-		\item p-Bisimilar TSs have \emph{bisimilar} traces, i.e., same traces 
-			modulo (persistence-preserving) object renaming
-		\item Bisimilar traces satisfy exactly same \ltlffop formulas
-	\end{itemize}
-\end{itemize}
-Proof substantially analogous to that of~\cite{}, but different technicalities
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{From \ltlffop  Model Checking to Monitoring}
-
-Assume the system has produced a log-trace:
-$$\tau=e_1~\cdots~e_n$$
-
-We can define a TS $\T_\tau$ s.t.:
-\begin{itemize}
-	\item all $\T_\tau$ traces with $\geq n$ events have the form:
-		\[e_1~e_1~\cdots~e_n~e_{n+1}\cdots~e_\ell\]
-	\item $\T_\tau$ produces all possible log traces
-\end{itemize}
-
-Clearly $\T_\tau$ is inifinite
-
-\begin{itemize}	
-	\item \emph{state-boundedness}: log traces are natively bounded 
-	
-	
-	say that we deal with log-traces and that activities have attributes
-	\item We need to establish decidability in this context
-\end{itemize}
-
-\begin{itemize}
-	\item The results we have are for bounded systems
-	\item Declarative PM is a setting where boundedness is a natural assumption
-	\item Genericity???? (We should have in the universal TS)
-	\item Idea is to prove MC first and then use a universal TS to solve monitoring
-		(can do so only if the set of activities is fixed)
-	\item Once we have sat, we can encode the prefix and the do monitoring in the standard way
-	\item we have to propositionalize everything (with combinatory explosion) then we can use coloring as 
-	already dones
-	\item Articolo di Riccardo de Masellis per gestire state explosion
-	\item Lavori di Demri per data types
-	\item Depending on the selected semantics for MP-Declare, LTLf-FOp may be 
-		good or not (if we have a set of variables that are changed by the events or not)s
-\end{itemize}
-
-\end{frame}
-
-%------------------------------------------------
-
-\end{document} 
-
-\endinput
-
-\begin{frame}
-\frametitle{This work}
-
-Main Contributions:
-\pause
-\begin{itemize}[<+->]
- \item Deductive approach to support transformational  program design and implementation
- \item Automated program synthesis technique with correctness guarantees (wrt spec)
-%% \item Link transformational and reactive synthesis
- \item \st{Fully-automated approach from in/out spec to program}
-\end{itemize}
 ~\\
 
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}[fragile]
-\frametitle{Example: \emph{Size-unbounded} List of int + \emph{register}}
-
-\small
-
-\begin{columns}[t]
-	\begin{column}{.4\textwidth} % Left column and width
-		Implementation (python)\\~\\
-
-		\tiny
-		Some lists:
-		\begin{verbatim}
-		[8,17,-5,78,13,4,36]
-		[7,22,12,40]
-		[10,5,13,12,17,-2]
-		\end{verbatim}
-
-		\hrule
-		
-		~\\
-		~\\
-		
-		Operations:
-		\begin{verbatim}
-		def right() :
-			global s
-			s += 1
-
-		def update_register() :
-			global reg
-			reg = list_ex[s]
-
-		def stop() :
-			global sc
-			sc = True
-		\end{verbatim}
-		\hrule
-		
-		~\\
-		~\\
-		
-		Tests:
-		\begin{verbatim}
-		less_than = list_ex[s] < reg
-
-		at_end = s == len(list_ex)-1
-		\end{verbatim}
-	\end{column}
-	\vrule
-	\begin{column}{.55\textwidth} % Left column and width
-		High-level spec
-
-		\begin{itemize}
-			\item \emph{Operations}\\ (no parameters, use register):
-				\begin{itemize}
-					\item $right$: moves cursor to the next element
-					\item $update\_reg$: copies the value of the current element in the register
-					\item $stop$: stops the execution (predefined)
-				\end{itemize}
-			\item \emph{Tests}:
-			\begin{itemize}
-				\item $less\_than$: tests if the current element  $<$ value in the register
-				\item $at\_end$: tests if at the end of the list 
-			\end{itemize}
-		\end{itemize}
-	\end{column}
-\end{columns}
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Example: Find min in List}
-	Task:
-	\begin{itemize}
-		\item Automatic generation of high-level program for minimum in a List 
-		\item Transformation into executable (immediate)
-	\end{itemize}
-	
-	~\\
-	\pause
-
-	Observations:
-	\begin{itemize}[<+->]
-		\item List state accessible \emph{only through tests}
-		\item Operations \emph{nondeterministic} (end of list is surprise!)
-		\item Program: \emph{controller} over List
-		\item Goal not observable!
-	\end{itemize}
-	
-	
-
-\end{frame}
-
-%------------------------------------------------
-
-
-\begin{frame}
-\frametitle{Generalized Planning}
-	Generalized Planning~{\tiny\cite{srivastava08learning,bonet09automatic,hu:generalized}}:
-	\begin{itemize}[<+->]
-	\item Instance: (possibly infinite) 
-		set of planning domains
-		\begin{itemize}
-			\item common actions and observations (tests)
-			\item e.g.: lists
-		\end{itemize}
-	\item Task: Find plan for \emph{reachability goal}
-		\begin{itemize}
-			\item e.g.: reach end of list
-		\end{itemize}
-	\item Same plan for \emph{all planning domains}
-		\begin{itemize}
-			\item must use common actions and observations
-		\end{itemize}
-	\item Assumption: \emph{goal is observable!}
-	\end{itemize}
-\end{frame}
-
-%------------------------------------------------
-
-
-\begin{frame}
-\frametitle{Generalized Planning}
-
-Typically solved by reduction to FOND planning~{\tiny\cite{bonet:ijcai2017}}:
-	\begin{itemize}[<+->]
-	\item FOND domain is \emph{observation abstraction} of \emph{all} planning domains
-		\begin{itemize}
-		 \item E.g., if not at end can move right
-		 \item if move right, next either at end or not
-		\end{itemize}
-
-	\item Nondeterminism models uncertainty over observations
-	\item Nondeterministic	effects are \emph{fair}
-		\begin{itemize}
-			\item infinitely many executions of an action 
-				imply occurrence of all effects
-			\item if move right infinitely many times,
-			eventually at end
-		\end{itemize}
-	\item Solutions are policies (stateless controllers): observations $\rightarrow$ action
-		\begin{itemize}
-			\item Strongly cyclic solutions: 
-				goal-reaching on fair traces
-			\item e.g.: move right until end observed
-		\end{itemize}
-	\end{itemize}
-	
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Generalized Planning and Program Synthesis}
-
-
-SIMILARITIES
-\begin{itemize}[<+->]
-	\item Conceptually analogous: one solution for all
-	\item Can see underlying instances as planning domains
-		(common actions and observations)
-\end{itemize}
-	
-~\\
-\pause
-	
-CRUCIAL DIFFERENCES
-	\begin{itemize}[<+->]
-	\item Goal is {\bf NOT observable}
-		\begin{itemize}
-			\item find min, but $min$ cannot be sensed
-		\end{itemize}
-	\item Goal is {\bf NOT reachability}
-		\begin{itemize}
-			\item min found if controller 
-				satisfies \emph{execution requirements} (see below)
-		\end{itemize}
-	\item Controller is {\bf stateful}
-	\end{itemize}
-
-\pause	
-\begin{center}
- Generalized (and FOND) planning not powerful enough!
-\end{center}
-	
-\end{frame}
-
-% ------------------------------------------------
-
-\begin{frame}[fragile]
-\frametitle{Execution Requirements}
-\framesubtitle{Beyond reachability and goal observablity}
-
-\begin{itemize}[<+->]
- \item Goal not observable: cannot test goal achievement
- 
- \item Goal achievement is consequence of controller execution
-	\begin{itemize}
-		\item must fulfill \emph{Execution Requirements}
-		\item Part of controller's goal
-	\end{itemize}
-\end{itemize}
-
-
-\pause
-
-\begin{block}{Execution Requirement}
-Temporal constraints over executions, e.g.:
-
+Steps \ref{item:transform} and \ref{item:simulate} can be applied incrementally:
 \begin{itemize}
-	\item {\bf ALWAYS 
-     (update register iff current value less than register)}
+	\item process only last incoming event of $\tau$ (and $\hat\tau$)
+	\item simulate only last transition in $\A_{\hat\varphi}$
 \end{itemize}
+\end{frame}
 
+%------------------------------------------------
 
+\begin{frame}
+\frametitle{Complexity}
 
-Guarantees that: {\bf (at end) $\rightarrow$  (min stored in register)}
+Complexity is triple-exponential:
+\begin{enumerate}
+	\item compute $\hat\varphi$: exponential wrt \# of quantified vars
+	\item compute $\A_{\hat\varphi}$: doubly exponential wrt size of $\hat\varphi$ (exp in \# of q'ed vars)
+	\item color $\A_{\hat\varphi}$: polynomial wrt size of $\A_{\hat\varphi}$ (doubly exp wrt size of $\hat\varphi$)
+\end{enumerate}
 
 ~\\
 
-(Assume start at leftmost cell)
-
-\end{block}
-
-\end{frame}
-
-% ------------------------------------------------
-
-\begin{frame}[fragile]
-\frametitle{Execution Requirements}
-\framesubtitle{Beyond reachability and goal observablity}
-
-Execution requirements:
-\begin{itemize}[<+->]
-	\item Designer responsibility
-	\item Hard to come up with $\rightarrow$ possibly as much as traditional program
-\end{itemize}
-
-\pause
-~\\
-
-Advantages:
-\begin{itemize}[<+->]
-	\item Work at solution logic level
-	\item Bugs cannot stem from implementation details
+Major obstacle, but:
+\begin{itemize}
+	\item $m$ typically small (arity is hardly large)
+	\item in practice not much more difficult than propositional case
 \end{itemize}
 
 \end{frame}
@@ -732,310 +542,37 @@ Advantages:
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{LTL Synthesis}
+\frametitle{Conclusions and Future Work}
 
-LTL (Reactive) Synthesis (intuition):
-\begin{itemize}[<+->]
-	\item Given an LTL temporal specification $\varphi$
-	\item Synthesize a controller that satisfies $\varphi$
-	\item (specific setting with input/output propositions required)
+Conclusions:
+\begin{itemize}
+	\item We are addressing monitoring of MP-Declare
+	\item Currently focusing on data, \ltlffop
+	\item Computability result based on abstraction technique
+		\begin{itemize}
+			\item inspired by related research line on FO $\mu$-calc~\cite{} (Model Checking)
+		\end{itemize}
+	\item Complexity is a major obstacle: 
+		\begin{itemize}
+			\item Need whole automaton to perform coloring
+			\item but \# of objects typically small
+		\end{itemize}
 \end{itemize}
-
-\pause
-
-\begin{center}
-FOND + (fairness) + (temporal goal) solvable as \emph{LTL synthesis}
-\end{center}
 
 ~\\
 
-\begin{center}
-\bf Can synthesize transformational programs using LTL synthesis!
-\end{center}
-
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Program Synthesis as \emph{LTL synthesis}}
-
-LTL specification:
-%%Declarative pseudocode specification
-
-\[\varphi=Pre\land ((Eff  \land Fair) \rightarrow Goal)\]
-
-\pause
-
-\begin{itemize}[<+->]
-	\item $Pre$: Action preconditions of observation abstraction (systematic)
-	\item $Eff$: Action effects+frame+init of observation abstraction (systematic)
-	\item $Fair$: Fairness assumptions (manual, designer, requires creativity, usually easy)
-	\item $Goal$: controller's  goal, includes exec reqs\\ (manual, designer, requires creativity, typically hard)
-\end{itemize}
-
-\pause
-Observation:
-\begin{itemize}
- \item $Goal$:  includes exec reqs and ``essence'' of program to synthesize\\ 
- (solution requirement)
-\end{itemize}
-
-
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Program Synthesis as \emph{LTL synthesis}}
-\framesubtitle{Example}
-
-\[\varphi=Pre\land ((Eff  \land Fair) \rightarrow Goal)\]
-
-  \small
-  \begin{itemize}[<+->]
-  \item $Pre$:
-    $\begin{array}{l}
-       \always (\mathit{right} \limp \lnot \mathit{at\_end}) \land {}\\
-     \always (\mathit{right} \;xor\; \mathit{update\_reg} \;xor\; \mathit{stop}) \land
-       \always (\mathit{stop} \limp\nextX \mathit{stop})
-     \end{array}
-     $
- 
-  \item $Eff$:
-    $\begin{array}{l}
-       \always(\mathit{update\_reg} \limp \nextX \lnot \mathit{less\_than} \land pers(\mathit{at\_end}))\land {}\\
-       \always(\mathit{stop} \limp pers(\mathit{at\_end}) \land pers(\mathit{less\_than}))
-     \end{array}
-     $
-
-\item $Fair$: 
-	$\begin{array}{l}
-		\always\, \eventually \mathit{right} \limp \eventually \mathit{at\_end}
-	\end{array}
-	$
-\item $Goal$:
-	$\begin{array}{l}
-       \eventually\, \always\mathit{at\_end} \land {}\\
-		\always(\mathit{less\_than} \equiv \mathit{update\_reg})
-     \end{array}
-     $
-\end{itemize}
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}[fragile]
-\frametitle{Program Synthesis as \emph{LTL synthesis}}
-\framesubtitle{Example, cont'd}
-\small
-LTL synthesis engine \textsc{strix} (\url{strix.model.in.tum.de/try/})
-
-\begin{verbatim}
-G((r & !s & !u) || (!r & s & !u) || (!r & !s & u)) & G(s -> X(s))
-G(r -> !e)
-(G(u -> (X(!lt) & (e <-> X(e)))) & 
- G(s -> ((e <-> X(e)) & (lt <-> X(lt)))) & G(F(r)) -> F(e)) ->
-               (F(G(e)) & G(lt <-> u))
-
-input: e, lt  output: r, s, u
-\end{verbatim}
-
-\begin{center}
-	\includegraphics[width=.5\textwidth]{figures/automata_min_list_for_notebook}
-\end{center}
-\vspace{-2ex}
-\hfill $\mathit{at\_end},\, \mathit{less\_than} \;/\; \mathit{right},\, \mathit{stop},\, \mathit{update\_reg}$
-
-
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}[fragile]
-\frametitle{Program Synthesis as \emph{LTL synthesis}}
-\framesubtitle{Example, cont'd}
-  \footnotesize
-	\begin{columns}[t]
-	\begin{column}{0.45\textwidth}
-  Controller code (automatic)
-  \tiny
-\begin{verbatim}
-while not(sc):
-        #acting according to strategy
-        if(currState==0) :
-            if (not(at_end) and not(less_than)): 
-                right()
-                currState = 0
-            if (not(at_end) and less_than): 
-                update_register()
-                currState = 1
-            if (at_end and less_than): 
-                update_register()
-                currState = 2
-            if (end and not(less_than)): 
-                stop()
-                currState = 2
-        elif(currState == 1) :
-            if (not(at_end) and not(less_than)): 
-                right()
-                currState = 0
-            if(less_than or at_end):
-                right()
-                currState=2
-        elif(currState == 2) :
-            stop()
-            currState=2
-\end{verbatim}
- 
-\end{column}
-\begin{column}{0.45\textwidth}
- Run on concrete list:
- \tiny
-\begin{verbatim}
-List:  [8, 17, -5, 78, 13, 4, 36]
-Action performed: right
-Action performed: right
-Action performed: update_register
-Action performed: right
-Action performed: right
-Action performed: right
-Action performed: right
-Action performed: stop
-Minimum value of the list: -5
-
-List:  [7, 22, 12, 40]
-Action performed: right
-Action performed: right
-Action performed: right
-Action performed: stop
-Minimum value of the list: 7
-
-List:  [10, 5, 13, 12, 17, -2]
-Action performed: right
-Action performed: update_register
-Action performed: right
-Action performed: right
-Action performed: right
-Action performed: right
-Action performed: update_register
-Action performed: stop
-Minimum value of the list: -2
-
-\end{verbatim}
- % List:  [99]
-% Action performed: stop
-% Minimum value of the list: 99
-\end{column}
-\end{columns}
-% 
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Summary of the Approach}
-
-\begin{center}
-	\includegraphics[scale=.5]{figures/diagram}
-\end{center}
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Some Experiments}
-
-Approach successfully tested 
-with\footnote{Implementation by master students E. Cicero, 
-D.~Giunta, L.~Pierdicca.}:
-
-\begin{itemize}
-	\small
-	\item List traversal (paper)
-	\item Doubly-linked list traversal (paper)
-	\item Binary tree traversal (paper)
-	\item Graph traversal (paper)
-	\item min/max in list (paper)
-	\item Tree membership (paper)
-	\item Copy even numbers in another list
-	\item Sum of positive numbers of a list
-	\item Bubble sort
-	\item Robot navigation to position in a matrix 
-\end{itemize}  
-
-All solutions in paper obtained in $<10$s using 
-\textsc{ Strix} online demo version 
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Conclusions}
-
-\begin{itemize}[<+->]
-	\item A logic-based deductive approach to support designers/programmers
-		\begin{itemize}
-			\item Correctness guarantee
-		\end{itemize}
-
-	\item Semi-automated program synthesis technique
-		
-	\item Requires \emph{creativity}:
-		\begin{itemize}
-			\item Fairness assumptions
-			\item Execution requirements (and goal)
-% 			\emph{logical} constraints on 
-% 				\emph{traces} controller induces/considers
-		\end{itemize}
-		
-	\item Advantages:
+Future Work:
 	\begin{itemize}
-		\item Focus on solution logic, not on implementation details
-		\item Confination of bug sources
+		\item Write the paper \smiley
+		\item Assess practical impact of persistence-preservation wrt MP-Declare
+		\item Implementation
+		\item Evaluate additional complexity wrt propositional case in practice
 	\end{itemize}
-		
-	\item Amenable to automated reasoning (not this paper)
-	
-\end{itemize}
 
-\end{frame}
 
-%------------------------------------------------
+%% avoid minimization -> work with nfa -> can we adapt the coloring/monitoring algorihtm?
+%% 
 
-\begin{frame}
-\frametitle{Future Work}
-
-\begin{itemize}[<+->]
-	\item Improve performance/scalability:
-		\begin{itemize}
-			\item \emph{Planning instead of full-fledged LTL synthesis}
-			\item e.g., focus on LTLf goals 
-				under assumptions 
-				(such as fairness in FOND)
-		\end{itemize}
-	\item Modularity: if/how specifications can be combined?
-		\begin{itemize}
-		\item e.g., min in list is list traversal with 
-			different execution requirements
-		\end{itemize}
-\end{itemize}
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\Huge{
-	\centerline{Thanks for the Attention!}
-	~\\
-	\centerline{Q\&A}
-}
 
 \end{frame}
 
@@ -1043,15 +580,18 @@ All solutions in paper obtained in $<10$s using
 
 \begin{frame}[allowframebreaks]
 \frametitle{References}
-\tiny{
+\normalsize{
 % \begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
 % \bibitem[Smith, 2012]{p1} John Smith (2012)
 % \newblock Title of the publication
 % \newblock \emph{Journal Name} 12(3), 45 -- 678.
 % \end{thebibliography}
 \bibliographystyle{amsalpha}
-\bibliography{control,control2}
+\bibliography{biblio.bib}
 }
 \end{frame}
 
 %----------------------------------------------------------------------------------------
+
+\end{document} 
+
