@@ -15,7 +15,7 @@
 %	PACKAGES AND THEMES
 %----------------------------------------------------------------------------------------
 
-\documentclass[xcolor=dvipsnames]{beamer}
+\documentclass[xcolor=dvipsnames,aspectratio=169]{beamer}
 
 \mode<presentation> {
 
@@ -212,12 +212,12 @@ Problem:
 \begin{frame}
 \frametitle{The Declare Family}
 
-	$$\tau=(A,2,1)~(B,1,44,4)~(D,'hello',3)~(A,3,3)$$ 
+%%	$$\tau=(A,2,1)~(B,1,44,4)~(D,'hello',3)~(A,3,3)$$ 
 
 Declare comes in several variants
 
 \begin{itemize}
-	\item Declare (propositional)~\cite{}: no payloads, no (metric) time
+	\item Declare (propositional)~\cite{PesicSA07}: no payloads, no (metric) time
 	\item Multi-Perspective~\cite{mp-declare}: payloads (data), metric time
 	\item Data-only perspective ({\bf this work})
 	\item Time-only perspective
@@ -253,13 +253,8 @@ where:
 
 ~\\
 
-Allowed templates:
-\begin{scriptsize}
-\begin{itemize}
-	\item (ignore time subscripts $I$)
-	\item (can be equivalently defined without past operators $Y$ and $O$)
-\end{itemize}
-\end{scriptsize}
+Allowed templates
+(\footnotesize{ignore time subscripts $I$; can be equivalently defined without past operators $Y$ and $O$}):
 
 \begin{center}
 \includegraphics[scale=.3]{figures/mp-declare}
@@ -298,7 +293,8 @@ Allowed templates:
 \begin{frame}
 \frametitle{Solution for propositional case (\ltlf)}
 
-Approach for propositional case (\ltlf)~\cite{monitoring11}:  
+Approach for propositional case (\ltlf)
+~~~~\cite{monitoring11,MGMM14} (also FMAI2017):  
 \begin{enumerate}
 	\item From $\varphi$, obtain $\A_\varphi$ (det, minimized)
 	\item (Fixpoint computation)\\ 
@@ -418,7 +414,7 @@ Obstacles:
 Recall: 
 \begin{itemize}
 	\item activities carry a payload, i.e., $(A,1,2)$ instead of $A$
-	\item payloads come from infinite domain (e.g., $\mathbb{N}$)
+	\item payloads come from infinite domain (e.g., strings)
 	\item $\A_\varphi$ must take payload into account ${}\rightarrow{}$ expect infiniteness
 \end{itemize}
 \end{frame}
@@ -443,7 +439,7 @@ IDEA:
 ~\\
 
 Example ($\tilde{\cdot}$ stands for \emph{persistence-preserving} version):\\
-$\varphi=\tilde\always(\forall x.((Pay\land\phi_a(x)) \rightarrow \tilde\eventually (Ship \land\exists y.\phi_c(x, y))))$,
+$\varphi=\always(\tilde\forall x.((Pay\land\phi_a(x)) \rightarrow \eventually (Ship \land\tilde\exists y.\phi_c(x, y))))$,
 
 \begin{itemize}
 	\item $\phi_a\equiv item=x$ \text{ (\emph{activation} condition)}
@@ -500,7 +496,7 @@ Approach for \ltlffop:
 	\item Compute $\hat\varphi$:\\ 
 		~~~~propositional version of $\varphi$ (quantifier elimination with $\hat\Delta$) 
 	\item Compute and color $\A_{\hat\varphi}$ (same as propostitional)
-	\item\label{item:transform} Transform input $\hat\tau$ into p-bisimilar $\hat\tau$ over $\hat\Delta$, e.g.:
+	\item\label{item:transform} Transform input $\tau$ into p-bisimilar $\hat\tau$ over $\hat\Delta$, e.g.:
 		\begin{itemize}
 			\item $(\orange{Pay},10,\violet{shoes})~~~~(\sepia{DoSomething},\violet{shoes})~~~(\green{Ship},\violet{shoes},Park Avn)$
 			\item $~~~(\orange{Pay},o_1,\violet{o_2})~~~~~~~~(\sepia{DoSomething},\violet{o_2})~~~~~~~~~~~~(\green{Ship},\violet{o_2},o_1)$
@@ -533,7 +529,7 @@ Complexity is triple-exponential:
 
 Major obstacle, but:
 \begin{itemize}
-	\item $m$ typically small (arity is hardly large)
+	\item $m$ typically small (activity arities rarely large)
 	\item in practice not much more difficult than propositional case
 \end{itemize}
 
@@ -597,7 +593,7 @@ Questions?
 % \newblock Title of the publication
 % \newblock \emph{Journal Name} 12(3), 45 -- 678.
 % \end{thebibliography}
-\bibliographystyle{amsalpha}
+\bibliographystyle{apalike}
 \bibliography{biblio.bib}
 }
 \end{frame}
